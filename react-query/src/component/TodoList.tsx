@@ -17,13 +17,17 @@ const TodoList = () => {
   };
   // this use query hook returns various object getting data out of it namings it todos
 
-  const { data: todosList } = useQuery({
+  const {
+    data: todosList,
+    error,
+    isLoading,
+  } = useQuery<Todo[], Error>({
     queryKey: ["todos"],
     queryFn: fetchtodos,
   });
 
-  // if (error) return <p>{error}</p>;
-
+  if (isLoading) return <p>Loading</p>;
+  if (error) return <p>{error.message}</p>;
   return (
     <ul className="list-group">
       {todosList?.map((todo) => (
