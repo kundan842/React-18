@@ -10,17 +10,12 @@ interface Post {
 }
 
 const PostList = () => {
-  const [userId, setUserId] = useState<number>();
-  const { data: posts, error, isLoading } = usePost(userId);
+  // for paginated query to keep track of page and page size need to use two state varible and that should pass as  postQuery object to custom hooks
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+  const { data: posts, error, isLoading } = usePost({ page, pageSize });
   //   const [posts, setPosts] = useState<Post[]>([]);
   //   const [error, setError] = useState('');
-
-  //   useEffect(() => {
-  //     axios
-  //       .get('https://jsonplaceholder.typicode.com/posts')
-  //       .then((res) => setPosts(res.data))
-  //       .catch((error) => setError(error));
-  //   }, []);
 
   if (isLoading) return <p>Loading...</p>;
 
@@ -28,18 +23,6 @@ const PostList = () => {
 
   return (
     <>
-      <select
-        name=""
-        id=""
-        className="form-select mb-3"
-        onChange={(event) => setUserId(parseInt(event.target.value))}
-        value={userId}
-      >
-        <option value=""></option>
-        <option value="1">User1</option>
-        <option value="2">User2</option>
-        <option value="3">User3</option>
-      </select>
       <ul className="list-group">
         {posts?.map((post) => (
           <li key={post.id} className="list-group-item">
@@ -47,6 +30,19 @@ const PostList = () => {
           </li>
         ))}
       </ul>
+      <button
+        disabled={page == 1}
+        className="btn btn-primary"
+        onClick={() => setPage(page - 1)}
+      >
+        Prev
+      </button>
+      <button
+        className="btn btn-primary ms-1"
+        onClick={() => setPage(page + 1)}
+      >
+        Next
+      </button>
     </>
   );
 };

@@ -584,8 +584,138 @@ user interactions at high level
    custom hooks 
 => custom hooks allows to share functionality between diffrent componennt
 => like fetching usere, cutom hooks can be created out of it 
+=====================================================================================
+            // Game store with data react query, global state management, routing
+=> React query
+  => caching
+  => automatic retry
+  => automatic refresh
+  => paginated query
+=> global statemanagement
+  => reducers
+  => context
+  => providers
+  => zustand (3rd party libarey for state management)
+=> Routing with react router => to build multipage appliaction
+=====================================================================================
+=>      React Query
+  => fetch data , pagination, error handling, infinite queries, debug using raect query dev tools
+          mutating  data
+  => handle crud operation, optimsitic updates , custom hooks, reusable service
+ =============== ===============================================================================================================
+ => while fetching data using , axios in effect hook theer are some issues
+  => no request cancaletion
+    => from react 18 , strict mode is on so a compoent is renered twice so , data is fetched twice to mkae sure 
+  => no retries
+      => if the request is failed, there is no retry
+  => no automatic refresh
+  =>no caching
 
+  caching => process of storing data in place where it can be accesssed more 
+  quickly and more efficiently
+  => so client side some data is needed more frequenctly in such cases , store data in browers no need to call server each time
+  => so in raect can store the frequenctly use data on client on user browser
+  => React Query is a library that simplifies fetching, caching, and updating data in React
+applications.
+=> redux is also being used for caching, redux is powerful library for global state management in javascript appliaction
+=> redux maintains single global store for data caching, 
+=> these gloabl stores are the obejet in users browser {emal:, name:}
+=> reuired so much boilerplate appliaction
+=> so reducx can be avoided for data caching
+npm i @tanstack/react-query@4.28
+    React query 
+=> npm i @tanstack/react-query@4.28
+=> query client is core object for managing and caching the remote data
+=> import { QueryClient, QueryClientProvider } from '@tanstack/react-query' in main
+=> this queryClient objetc need to e passed to component tree as props using queryClient provider
+=> useQuery hook 
+useQuery({
+    queryKey: ["todos"],
+    queryFn: fetchtodos,
+  })
+=> querykey takes the key name , uses it to store the cahecd data and retrive the cacheddata
+=> queryFn takes callback fucntion which fetches the data to be cacheddata
+=> react query interanlly retries if call to server falied, refersh cahecd daat after certain time
+=> reactquery along with data return error property that cannot be rendered directly 
+in react node cause each httplibreyr like fatch api, axios returns diffrent type of error
+=> but each error is instance of browsers supported Error so can passs the as generic parametr
 
+useQuery<Todo[],Error>({
+    queryKey: ["todos"],
+    queryFn: fetchtodos,
+  });
+=> useQuery hook also return the property named isLoading
+=> so no need to use theree state variable data, error and isLoading
 
+  const {
+    data: todosList,
+    error,
+    isLoading,
+  } = useQuery<Todo[], Error>({
+    queryKey: ["todos"],
+    queryFn: fetchtodos,
+  });
 
+  => a component should be responsible for returning the jsx , it should not know how the data is being laoding
+  so better to use custom hooks
+  ===================================================================================================================================
+    React QUERY DEVTOOLS
+=> like other react liberery , raect query too have the DEVTOOLS
+=> this devlootl is added to component tree in main.tsx
+=> only for the devlopement build these , devtools is renderd not for production build
+=>  npm i @tanstack/react-query-devtools@4.28
+=> by default cache time cacheTime: 300000 5 min after which data is refreshed
+=> observers , no of compoennet using  raect query cached data
+=> if no obesers is there then the react query garbage collector will remove the cached data
+====================================================================================================================
+        QUERY CLIENT DEFAULT setting
+  => WE CAN CUSTOMIZE THE DEFUALT SETTINGS OF QUERY CLIENT
+  => DOD LINK: https://tanstack.com/query/v4/docs/reference/QueryClient
+  {
+  defaultOptions: {
+    queries: {
+      retry: 3,
+      cacheTime: 30000, // 5s 
+      staleTime: 10*1000, // 10 s
+      refetchOnWindowFocus:false,
+      refetchOnReconnect:false,
+      refetchOnMount:false
+    },
+  },
+}
+=> in case of error , data will be fetched thrice
+=> staleTime : time after which data becomes old so data need to be refetchd 
+=> refetchOnMount => if true then once the componet mount, query will be fetched
+=> data refetching : in case of data becomes stale, react query will try to fetch data from server 
+during this stale data which is cached is used by observers
+=> once the data is refetched, data and cached is updated and componennt is notified
+=> obeserver compoeent rerender
+=> so all settings of react query can be overwritten most of qurry settings works well
+=> stale time dependss on upto how much time data need to be refershed, less modified data can have the highlight
+stale time
+===================================================================================
+          Paramatrizd queries
+=> like useEffect if dependencies chnages , comoonent re rednders
+similarly in react query  return useQuery<Post[], Error>({
+    queryKey: userId ? ["user", userId, "posts"] : ["posts"],
+    queryFn: fetchPost,
+    staleTime: 10000, // 10 second
+  });
 
+  if any of queryKey chnages , queryFn is executes , here as userId chnages query is execured again
+  =>  for chosen each query parasms, data is fetched for the first time, and and active cahed data can be seen
+=> for other subsequesnt request, cached data is used
+======================================================================================================================================
+        Paginated queries
+  =>  for paginated query to keep track of page and page size need to use two state varible and that should pass as  postQuery object to custom hooks
+  =>  return useQuery<Post[], Error>({
+    queryKey:['posts', postQuery],
+    queryFn: fetchPost,}
+  => here keys contain the post query which have page and pagesize so anytime as 
+  page is changed query key chnages so will ftech the data
+  => keepPreviousData:true property to improve user experince , while fetcing other data, it keeps current page data so no loading or page uos down is shown
+  ===================================================================================
+                                              data muatations
+  => Unlike queries, mutations are typically used to create/update/delete data or perform server side-effects. For this purpose, TanStack Query exports a useMutation hook
+  doc link: https://tanstack.com/query/v4/docs/framework/react/guides/mutations
+  => about muatation and queries https://tkdodo.eu/blog/mastering-mutations-in-react-query
