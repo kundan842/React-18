@@ -719,3 +719,17 @@ similarly in react query  return useQuery<Post[], Error>({
   => Unlike queries, mutations are typically used to create/update/delete data or perform server side-effects. For this purpose, TanStack Query exports a useMutation hook
   doc link: https://tanstack.com/query/v4/docs/framework/react/guides/mutations
   => about muatation and queries https://tkdodo.eu/blog/mastering-mutations-in-react-query
+
+==============================================================================================================================================================================
+                                    global state management
+=> reducers => reducers is function that allows the centralize state updates in componennt
+=>earlier in counter component for managing state using useState , for two cases increment and reset need to set the value in componennt
+=> but commopnnet should be responsible for returing markup, and the state should be managed centralized
+=> so to provide the seperation of conecerns useReducers are being used for centralized state management
+for commopnnet
+=> useReducer take a custom reducer fucntion and initail state
+=> it return the value and dispatch (send) fucntion
+=> this dispatch fucntion takes action object or action to be taken by user
+=> onec this dispatch fucntion is called , rect calls the custom reducer fucntion pasing current state (value) and action
+=> custom reducer CounSterReducer takes two argument, current state and the action to be taken by user
+=> base on action it change state and return to compoeent so componennt rerenders
