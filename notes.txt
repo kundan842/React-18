@@ -733,3 +733,16 @@ for commopnnet
 => onec this dispatch fucntion is called , rect calls the custom reducer fucntion pasing current state (value) and action
 => custom reducer CounSterReducer takes two argument, current state and the action to be taken by user
 => base on action it change state and return to compoeent so componennt rerenders
+=====================================================================================================
+                          sharing state using react context
+=> sharing state = lift the state upto closest  parent commopnnet,   pass as props to child compoennet
+=> lets say appliaction contains app commopnnet, hompage commopnnet, navbar and tasklist commopnnet
+=> to show the no of task in tasklist on navabr , state of tasklist count need to be maintained in app
+so count can be passed to navabr and tasklist
+=> but to pass count to tasklist, props need to be passed to hompage from app, then 
+from hompage will be passed to tasklist 
+=> as compoennt tree grows up , props passing becomes complex
+=> this passing of props is known as prop drilling 
+============================== REACT CONTEXT ====================================
+=> allows data sharing , without passing it down through various commopnnet in middle
+=> so code will be more cleaner and maintainable
