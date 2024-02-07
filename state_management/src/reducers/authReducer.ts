@@ -9,7 +9,7 @@ interface LogoutAction
     type:"LOGOUT"
 }
 
-type authAction = LoginAction | LogoutAction
+export type authAction = LoginAction | LogoutAction
 
 const authReducer = (state:string, action:authAction) =>
 {

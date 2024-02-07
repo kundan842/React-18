@@ -2,12 +2,12 @@
 // in case of deltee type, task id need to pass
 // so there is two diffrent payload 
 // so action will be union of two action
-interface Task {
+export interface Task {
     id: number;
     title: string;
   }
 
-interface AddTask 
+export interface AddTask 
 {
     type: 'ADD'
     task: Task
@@ -22,7 +22,7 @@ interface DeleteTask
 
 // here user action will be either addtask or delete task with two diffrent payload
 
-type TaskAction = AddTask | DeleteTask
+export type TaskAction = AddTask | DeleteTask
 
 const taskReducer = (tasks:Task[], action:TaskAction) =>
 {
