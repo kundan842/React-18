@@ -746,3 +746,128 @@ from hompage will be passed to tasklist
 ============================== REACT CONTEXT ====================================
 => allows data sharing , without passing it down through various commopnnet in middle
 => so code will be more cleaner and maintainable
+=> react context is like truck trasnporting box, inside box we can have some state
+=============================================================
+zustand is replacement for rednders
+=> we can share the stae with any commopnnet
+==================================================================================
+                      Routing with react router
+=> to crarte multipage applications
+key things to be learned
+=> seeting up the routes
+=> navigating between pages
+=> handling errors
+=> dynamic routes
+=> private rouetes
+=> nested routes
+  =>  npm i react-router-dom@6.10.0
+  => react has BrowserRouter componenet that doesnot support all feautrs of react routing
+  => so not good component to craerte browser routing
+  => bettwer to use create browser router
+  => / createBrowserRouter function takes array of RouteObject
+// each RouteObject has two property path, elememnt
+// which decides if the user is on that path , then theta particular element or component shouuld render
+=> after call return router obejct
+=> react router have RouterProvider compoennet which provides  context using that router can be shared to application
+=> have various hooks to work with router
+=> here insted of rendering a single compoennet like app rendring Router provider compnent having router
+=> so react will render compoeent based on path or user location, this is idea of routing
+======================================================================================================================
+                          Navigating through pages
+=> basic nature of anchor tag of html is its do full page reload for that page
+so will load all script, html, css all reloads instead of just content and download to client
+=> in case when we are on home page, it has anchir tag that refers to user paths
+=> while clicking the user path, request will go to server to downlood the entire content
+that can be seen in network tab
+=> so react router have the Link compoent , which will make no request to server just  componet get renderd
+=> to navigat from one page to other like if user on contcat page , submits form should navigated to homepage
+=> so for navigatinn programaticly from one to another page have useNavigate hook  in react rouetr dom
+
+   const navigate = useNavigate()
+   naviagte("/)
+=> passing data with  route parameter
+=>  { path: "/users/:usr_id", element: <UserDetailPage />}
+<Link to={`/users/${user.id}`}>{user.name}</Link>
+
+=========================================================================================
+        Getting data about current route
+  =>The useParams() hook is used to retrieve the route parameters in the current route.
+    http://localhost:5173/users/1
+    params {usr_id: '1'}
+    { path: "/users/:usr_id", element: <UserDetailPage />}
+  =>The useSearchParams() hook is used to retrieve and update the query string
+parameters of the current URL.
+  http://localhost:5173/users/1?name=kundan&surname=bhagat
+  searchParams.toString()
+ search params  name=kundan&surname=bhagat
+console.log("name", searchParams.get("name"));
+name kundan
+=> use Loaction hook 
+hash
+: 
+""
+key
+: 
+"default"
+pathname
+: 
+"/users/1"
+search
+: 
+"?name=kundan&surname=bhagat"
+state
+: 
+null
+=================================================================================
+                      nested routes
+The <Outlet> component is used as a placeholder to render child component when
+working with nested routes.
+=> ROUTES CAN HAVE CHILDREN
+=> in child routes path should be relative to parent routes
+===================================================================================
+     styling the activr link
+=> NavLink is similar to Link componenet, diffrence is that NavLink apply active class it self if link is clicked
+===============================================================================
+      Handling error
+=> if user tries to access invalid route page then eror occurs and raect shows standdard error page
+http://localhost:5173/usersx
+Unexpected Application Error!
+404 Not Found
+=> we can show our error page in case of invalid route to do that root route objetc has property
+ errorElement: <ErrorPage />
+
+ so on error that errorElement page will render
+ => but there can be internal componet errro too in that case too elelemt defined in Errorpage will render
+ so in that ErrorPage , all error can be logged
+ => const error = useRouteError()
+ => so this helps to grab invalid route error or error thrown while rendering componenet
+ => so diffrentiae between error generetd from  invalid route and from compoponet
+ we can pass error to this function from react router dom isRouteErrorResponse(error)
+ => in case of invalid rouete , this function return true
+ ======================================================================================
+                                    private routes
+=> there are some routes that nedd to be accessd once user is login so to protact route
+two approach 
+1. check if user exit and if not redirect to login page
+ const { user } = useAuth();
+  if (!user) return <Navigate to="/login" />;
+=> in this approach , need to get user and check and Navigate to Login its kind of repetitive
+-> heer not using useNavigate as it has side effect that must be used insid effect hook or event hanledrs
+using elewhere make componenet impure having side effect
+=> so using NavigateComponent wrapper around useNavigate
+
+==========================================================================================================
+              Protechting routes using layout  routes
+=> we can group similar routes inside layout routes
+=> Layout routes are useful to enforce a common layout or business rules across a group of
+routes. A layout route is a route without a path.
+=> like all the route that need to b be protected can be added to Single Lsyout route
+
+   const PrivateRoutes = () => {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" />;
+  // if user is login then at run time children component will be render inside Outlet
+  return <Outlet></Outlet>;
+};
+
+

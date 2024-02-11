@@ -4,6 +4,7 @@ import AuthContext from "../contexts/authContext";
 import useAuth from "../hooks/useAuth";
 
 const LoginStatus = () => {
+  // using custom hook , that internally uses the conetx
   const { user, dispatch } = useAuth();
   if (user)
     return (

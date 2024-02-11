@@ -6,6 +6,7 @@ import Layout from "../components/Layout";
 import LoginPage from "../components/LoginPage";
 import UserDetailPage from "../components/UserDetailPage";
 import UserPage from "../components/UserPage";
+import PrivateRoutes from "./privateRoutes";
 
 const nestedRouter = createBrowserRouter([
   {
@@ -15,15 +16,21 @@ const nestedRouter = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       {
-        path: "/login",
+        path: "login",
         element: <LoginPage />,
       },
+
+      { path: "contact", element: <ContactPage /> },
+    ],
+  },
+  {
+    element: <PrivateRoutes />,
+    children: [
       {
         path: "users",
         element: <UserPage />,
         children: [{ path: ":usr_id", element: <UserDetailPage /> }],
       },
-      { path: "contact", element: <ContactPage /> },
     ],
   },
 ]);
