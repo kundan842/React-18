@@ -11,7 +11,7 @@ const UserDetailPage = () => {
   console.log("search params", searchParams.toString());
   console.log("name", searchParams.get("name"));
   console.log("location", location);
-  return <p>User</p>;
+  return <p>User {params.usr_id}</p>;
 };
 
 export default UserDetailPage;
